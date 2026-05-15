@@ -2245,8 +2245,8 @@
   <div class="h-context" id="h-country">MTAC · République du Tchad</div>
   <div class="h-right">
     <div class="h-pill live"><span class="dot"></span><span id="h-data-status">Données à jour</span></div>
-    <div class="h-pill"><span class="ico">📅</span><span id="h-period">Avril 2026</span></div>
-    <div class="h-pill"><span class="ico">📍</span><span id="h-scope">National</span></div>
+    <div class="h-pill"><span id="h-period">Avril 2026</span></div>
+    <div class="h-pill"><span id="h-scope">National</span></div>
   </div>
 </header>
 
@@ -2368,13 +2368,13 @@ const PROV_ZONE = {
 
 // 7 DOMAINES OACI — Cadre d'audit USOAP (équivalent des 7 domaines PDA du modèle)
 const PDA_DOMAINS = [
-  { id:"D1", code:"LEG", label:"Cadre Législatif (LEG)",     icon:"⚖", color:"#0B3D91" },
-  { id:"D2", code:"ORG", label:"Organisation (ORG)",          icon:"🏛", color:"#1D4ED8" },
-  { id:"D3", code:"PEL", label:"Licences Personnel (PEL)",    icon:"📜", color:"#0E7490" },
-  { id:"D4", code:"OPS", label:"Exploitation (OPS)",          icon:"✈", color:"#0369A1" },
-  { id:"D5", code:"AIR", label:"Navigabilité (AIR)",          icon:"🔧", color:"#9A3412" },
-  { id:"D6", code:"AIG", label:"Enquêtes Accidents (AIG)",    icon:"🔬", color:"#9F1239" },
-  { id:"D7", code:"AGA", label:"Aérodromes (AGA)",            icon:"🛫", color:"#15803D" },
+  { id:"D1", code:"LEG", label:"Cadre Législatif (LEG)",     icon:"", color:"#0B3D91" },
+  { id:"D2", code:"ORG", label:"Organisation (ORG)",          icon:"", color:"#1D4ED8" },
+  { id:"D3", code:"PEL", label:"Licences Personnel (PEL)",    icon:"", color:"#0E7490" },
+  { id:"D4", code:"OPS", label:"Exploitation (OPS)",          icon:"", color:"#0369A1" },
+  { id:"D5", code:"AIR", label:"Navigabilité (AIR)",          icon:"", color:"#9A3412" },
+  { id:"D6", code:"AIG", label:"Enquêtes Accidents (AIG)",    icon:"", color:"#9F1239" },
+  { id:"D7", code:"AGA", label:"Aérodromes (AGA)",            icon:"", color:"#15803D" },
 ];
 
 // Indicateurs OACI par domaine (équivalents des indicateurs PDA du modèle)
@@ -2664,8 +2664,8 @@ const I18N = {
     mode_month: "Mois",
     mode_quarter: "Trimestre",
     mode_year: "Année",
-    national_view: "🌍 National · 23 provinces",
-    pda_aggregate: "✈ 13 provinces RAS (agrégat)",
+    national_view: "National · 23 provinces",
+    pda_aggregate: "13 provinces RAS (agrégat)",
     pda_group: "── Provinces RAS (aérodromes) ──",
     other_provinces: "── Autres provinces ──",
     rag_green: "Conforme",
@@ -2677,9 +2677,9 @@ const I18N = {
     trend_vs: "vs N-1",
     source: "Source",
     stable: "Stable",
-    santex_tag: "◆ Veille IA — Mobilités",
-    prov_banner_pda: "✈ Province RAS",
-    prov_banner_default: "📍 Province",
+    santex_tag: "Veille IA — Mobilités",
+    prov_banner_pda: "Province RAS",
+    prov_banner_default: "Province",
     prov_banner_pda_suffix: "Réseau Aéroportuaire Stratégique",
     prov_banner_clear: "Retour vue nationale",
     twelve_months: "12 mois glissants",
@@ -2778,14 +2778,12 @@ function renderSidebar() {
         <div class="prog-icon">${p.icon}</div>
         <div class="prog-label">${label}</div>
         <div class="prog-count">${p.sub.length}</div>
-        <div class="prog-chev">▶</div>
       </div>
       <div class="subprog-list">
         ${p.sub.map(s => `
           <div class="subprog" data-sub="${s.id}" onclick="selectSub('${p.id}','${s.id}')">
             <span class="sp-label">${s.i18n_key ? t(s.i18n_key) : s.label}</span>
             ${s.pda ? '<span class="sp-pda-badge">RAS</span>' : ''}
-            <span class="sp-status ${s.status}"></span>
           </div>
         `).join("")}
       </div>
@@ -2890,7 +2888,6 @@ function renderProvinceBanner() {
   const airport = AIRPORTS[p.id];
   return `
     <div class="prov-banner ${isRas ? 'pda' : ''}">
-      <div class="prov-banner-icon">${isRas ? '✈' : '📍'}</div>
       <div class="prov-banner-text">
         <div class="prov-banner-tag">${isRas ? t("prov_banner_pda") : t("prov_banner_default")}</div>
         <div class="prov-banner-name">${p.name}${isRas && airport ? ' · ' + airport.name + ' (' + airport.code + ')' : ''}</div>
@@ -2918,7 +2915,7 @@ function renderTopbar(v) {
       ${PDA_PROVINCES.map(pId => {
         const p = PROVINCES.find(x => x.id === pId);
         const ap = AIRPORTS[pId];
-        return `<option value="${p.id}" ${state.provinceFilter === p.id ? 'selected' : ''}>✈ ${p.name}${ap ? ' — ' + ap.code : ''}</option>`;
+        return `<option value="${p.id}" ${state.provinceFilter === p.id ? 'selected' : ''}>${p.name}${ap ? ' — ' + ap.code : ''}</option>`;
       }).join("")}
     `;
   } else {
@@ -2927,7 +2924,7 @@ function renderTopbar(v) {
       <optgroup label="${t("pda_group")}">
         ${PDA_PROVINCES.map(pId => {
           const p = PROVINCES.find(x => x.id === pId);
-          return `<option value="${p.id}" ${state.provinceFilter === p.id ? 'selected' : ''}>✈ ${p.name}</option>`;
+          return `<option value="${p.id}" ${state.provinceFilter === p.id ? 'selected' : ''}>${p.name}</option>`;
         }).join("")}
       </optgroup>
       <optgroup label="${t("other_provinces")}">
@@ -3249,7 +3246,7 @@ function renderMap(metric, opts = {}) {
         title="${p.name} — ${dispVal(val)} · ${ZONES[PROV_ZONE[p.id]].name}">
         <div class="mc-name">${p.short}</div>
         <div class="mc-val">${dispVal(val)}</div>
-        ${isRas ? '<div class="mc-pda">✈ RAS</div>' : ''}
+        ${isRas ? '<div class="mc-pda">RAS</div>' : ''}
       </div>
     `;
   }).join("");
@@ -3263,10 +3260,10 @@ function renderMap(metric, opts = {}) {
   const modeToggle = `
     <div class="map-mode-toggle">
       <button class="mm-btn ${state.mapMode === 'performance' ? 'on' : ''}" onclick="setMapMode('performance')" title="Couleurs par performance (RAG)">
-        <span class="mm-icon">📊</span> Performance
+        Performance
       </button>
       <button class="mm-btn ${state.mapMode === 'zones' ? 'on' : ''}" onclick="setMapMode('zones')" title="Couleurs par zone agroclimatique">
-        <span class="mm-icon">🌍</span> Zones
+        Zones
       </button>
     </div>
   `;
@@ -3278,7 +3275,7 @@ function renderMap(metric, opts = {}) {
       <div class="leg-item"><span class="leg-dot" style="background:${ZONES.SAH.color}"></span>Saharienne (${ZONES.SAH.count})</div>
       <div class="leg-item"><span class="leg-dot" style="background:${ZONES.SHL.color}"></span>Sahélienne (${ZONES.SHL.count})</div>
       <div class="leg-item"><span class="leg-dot" style="background:${ZONES.SDN.color}"></span>Soudanienne (${ZONES.SDN.count})</div>
-      ${rasFocus ? '<div class="leg-item" style="margin-top:5px;padding-top:5px;border-top:1px solid var(--border);"><span class="leg-dot" style="background:var(--gold);"></span>Provinces RAS (✈)</div>' : ''}
+      ${rasFocus ? '<div class="leg-item" style="margin-top:5px;padding-top:5px;border-top:1px solid var(--border);"><span class="leg-dot" style="background:var(--gold);"></span>Provinces RAS</div>' : ''}
     `;
   } else {
     legendHtml = `
@@ -3287,7 +3284,7 @@ function renderMap(metric, opts = {}) {
       <div class="leg-item"><span class="leg-dot" style="background:var(--rag-yellow)"></span>À surveiller</div>
       <div class="leg-item"><span class="leg-dot" style="background:var(--rag-orange)"></span>Préoccupant</div>
       <div class="leg-item"><span class="leg-dot" style="background:var(--rag-red)"></span>Critique</div>
-      ${rasFocus ? '<div class="leg-item" style="margin-top:5px;padding-top:5px;border-top:1px solid var(--border);"><span class="leg-dot" style="background:var(--gold);"></span>Provinces RAS (✈)</div>' : ''}
+      ${rasFocus ? '<div class="leg-item" style="margin-top:5px;padding-top:5px;border-top:1px solid var(--border);"><span class="leg-dot" style="background:var(--gold);"></span>Provinces RAS</div>' : ''}
     `;
   }
 
@@ -3299,7 +3296,7 @@ function renderMap(metric, opts = {}) {
       </div>
       <div class="map-legend">${legendHtml}</div>
       <div class="map-info" id="map-info">
-        <div class="map-info-tag">${PDA_PROVINCES.includes(defaultProv) ? "✈ Province RAS" : "📍 Province"}</div>
+        <div class="map-info-tag">${PDA_PROVINCES.includes(defaultProv) ? "Province RAS" : "Province"}</div>
         <div class="map-info-name">${infoProv.name}${PDA_PROVINCES.includes(defaultProv) ? '<span class="map-info-pda">RAS</span>' : ''}</div>
         <div class="map-info-row"><span>Zone</span><span class="map-info-val" style="color:${infoZone.textDark ? '#5A3F1A' : infoZone.color};font-weight:700;">${infoZone.name}</span></div>
         <div class="map-info-row"><span>Valeur</span><span class="map-info-val">${dispVal(infoVal)}</span></div>
@@ -3331,7 +3328,7 @@ function showProvInfo(provId, metric, isVolume) {
   const info = document.getElementById("map-info");
   if (info) {
     info.innerHTML = `
-      <div class="map-info-tag">${isRas ? "✈ Province RAS" : "📍 Province"}</div>
+      <div class="map-info-tag">${isRas ? "Province RAS" : "Province"}</div>
       <div class="map-info-name">${p.name}${isRas ? '<span class="map-info-pda">RAS</span>' : ''}</div>
       <div class="map-info-row"><span>Valeur</span><span class="map-info-val">${display}</span></div>
       <div class="map-info-row"><span>Statut</span><span class="map-info-val"><span class="pill ${r}">${ragLabel(r)}</span></span></div>
@@ -3417,7 +3414,7 @@ function kpiExec(opts) {
           <div class="kpe-spark-lbl">${t("twelve_months")}</div>
         </div>
       </div>
-      ${action ? `<div class="kpe-action"><span class="kpe-action-icon">▶</span><span>${action}</span></div>` : ''}
+      ${action ? `<div class="kpe-action"><span>${action}</span></div>` : ''}
       <div class="kpe-source">${t("source")} : ${source}</div>
     </div>
   `;
@@ -3652,7 +3649,7 @@ VIEWS["min-overview"] = () => {
     crumbs: ["Tableau de bord Ministre", "10 KPI stratégiques", sectionLabel[section]],
     html: `
       <div class="ph ph-exec">
-        <div class="ph-tag ph-tag-exec">📋 Cabinet du Ministre · Vue exécutive · Validation J+5</div>
+        <div class="ph-tag ph-tag-exec">Cabinet du Ministre · Vue exécutive · Validation J+5</div>
         <div class="ph-title">Tableau de bord du Ministre — 10 indicateurs clés</div>
         <div class="ph-sub">Vue synthétique des indicateurs prioritaires du secteur transports & aviation civile · Pilotage de l'agenda ministériel.</div>
       </div>
@@ -3711,7 +3708,7 @@ VIEWS["avi-overview"] = (s) => {
     crumbs: ["Aviation Civile", "Vue d'ensemble"],
     html: `
       <div class="ph">
-        <div class="ph-tag">✈ DGAC / ADAC · Autorité de l'Aviation Civile du Tchad</div>
+        <div class="ph-tag">DGAC / ADAC · Autorité de l'Aviation Civile du Tchad</div>
         <div class="ph-title">Aviation civile · Vue d'ensemble nationale</div>
         <div class="ph-sub">Trafic, sécurité opérationnelle, conformité OACI et état du réseau d'aérodromes — synthèse nationale des indicateurs traceurs.</div>
       </div>
@@ -3781,7 +3778,7 @@ VIEWS["avi-trafic"] = (s) => {
     crumbs: ["Aviation Civile", "Trafic passagers"],
     html: `
       <div class="ph">
-        <div class="ph-tag">✈ Statistiques trafic · ADAC · DGAC</div>
+        <div class="ph-tag">Statistiques trafic · ADAC · DGAC</div>
         <div class="ph-title">Trafic passagers — Réseau aéroportuaire national</div>
         <div class="ph-sub">Volumes passagers mensuels par aérodrome · Hassan-Djamous Intl. + 4 régionaux + 8 secondaires.</div>
       </div>
@@ -3878,7 +3875,7 @@ VIEWS["avi-fret"] = (s) => {
     crumbs: ["Aviation Civile", "Trafic fret"],
     html: `
       <div class="ph">
-        <div class="ph-tag">📦 Fret aérien · ADAC · DGD</div>
+        <div class="ph-tag">Fret aérien · ADAC · DGD</div>
         <div class="ph-title">Trafic fret — Réseau aéroportuaire national</div>
         <div class="ph-sub">Volumes de fret aérien · imports / exports · hub régional Hassan-Djamous.</div>
       </div>
@@ -3912,7 +3909,7 @@ VIEWS["avi-securite"] = (s) => {
     crumbs: ["Aviation Civile", "Sécurité opérationnelle"],
     html: `
       <div class="ph">
-        <div class="ph-tag">🛡 Sécurité aérienne · ADAC · BEA</div>
+        <div class="ph-tag">Sécurité aérienne · ADAC · BEA</div>
         <div class="ph-title">Sécurité opérationnelle — Indicateurs traceurs</div>
         <div class="ph-sub">Incidents, MAPI, enquêtes BEA, programmes SMS · Surveillance continue de la performance sécurité.</div>
       </div>
@@ -3966,7 +3963,7 @@ VIEWS["avi-conformite"] = (s) => {
     crumbs: ["Aviation Civile", "Conformité OACI"],
     html: `
       <div class="ph">
-        <div class="ph-tag">⚖ USOAP-CMA · OACI · ADAC</div>
+        <div class="ph-tag">USOAP-CMA · OACI · ADAC</div>
         <div class="ph-title">Conformité OACI — Mise en œuvre effective (EI)</div>
         <div class="ph-sub">Évaluation des 8 domaines OACI par la Méthodologie d'Audit de Sécurité Universelle (USOAP-CMA).</div>
       </div>
@@ -4029,7 +4026,7 @@ VIEWS["avi-aero"] = (s) => {
     crumbs: ["Aviation Civile", "Aérodromes & infrastructure"],
     html: `
       <div class="ph">
-        <div class="ph-tag">🛫 13 aérodromes · ADAC · DGINF</div>
+        <div class="ph-tag">13 aérodromes · ADAC · DGINF</div>
         <div class="ph-title">Aérodromes & infrastructure — État du parc national</div>
         <div class="ph-sub">Inventaire des 13 aérodromes opérationnels · revêtement, balisage, RFFS, sûreté AVSEC.</div>
       </div>
@@ -4090,7 +4087,7 @@ VIEWS["avi-coord"] = (s) => {
     crumbs: ["Aviation Civile", "Coordination régionale"],
     html: `
       <div class="ph">
-        <div class="ph-tag">🌍 ASECNA · CEMAC · CAFAC</div>
+        <div class="ph-tag">ASECNA · CEMAC · CAFAC</div>
         <div class="ph-title">Coordination régionale — Aviation civile</div>
         <div class="ph-sub">Engagement Tchad dans les instances régionales et continentales · ASECNA, CEMAC-Air, CAFAC, Marché Unique du Transport Aérien Africain (MUTAA).</div>
       </div>
@@ -4143,7 +4140,7 @@ VIEWS["vacc-pda"] = (s) => {
       crumbs: ["Aviation Civile", "RAS — Réseau Aéroportuaire Stratégique"],
       html: `
         <div class="ph">
-          <div class="ph-tag">✈ Sous-composante Aérodromes · USOAP / OACI</div>
+          <div class="ph-tag">Sous-composante Aérodromes · USOAP / OACI</div>
           <div class="ph-title">RAS — Réseau Aéroportuaire Stratégique</div>
           <div class="ph-sub">Cadre d'engagement OACI × ADAC · 13 aérodromes opérationnels · 7 domaines USOAP · 33 indicateurs traceurs.</div>
         </div>
@@ -4152,7 +4149,7 @@ VIEWS["vacc-pda"] = (s) => {
 
           <div class="card" style="background:linear-gradient(135deg,#EFF6FF 0%,#DBEAFE 100%);border:1px solid var(--royal-pale);padding:16px 18px;margin-bottom:14px;">
             <div style="display:flex;align-items:center;gap:14px;">
-              <div style="background:var(--royal);color:white;width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;flex-shrink:0;">✈</div>
+              <div style="background:var(--royal);color:white;width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-h);font-size:13px;font-weight:700;letter-spacing:0.5px;flex-shrink:0;">RAS</div>
               <div style="flex:1;">
                 <div style="font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--royal-d);margin-bottom:3px;">Périmètre d'analyse RAS</div>
                 <div style="font-size:13.5px;color:var(--body);line-height:1.5;">Le RAS s'applique exclusivement aux <strong>13 provinces dotées d'aérodromes opérationnels</strong> · 1 international (NDJ) + 4 régionaux + 8 secondaires.</div>
@@ -4168,7 +4165,6 @@ VIEWS["vacc-pda"] = (s) => {
             ${domainAggregates.map(d => `
               <div class="card" style="padding:14px;cursor:pointer;transition:all 0.2s;border-top:3px solid ${d.color};" onclick="setPdaDomain('${d.id}')" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='';this.style.boxShadow='';">
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-                  <span style="font-size:18px;">${d.icon}</span>
                   <code style="font-family:var(--font-mono);font-size:11px;color:${d.color};font-weight:700;letter-spacing:1px;">${d.code}</code>
                 </div>
                 <div style="font-size:12px;font-weight:700;color:var(--ink);line-height:1.25;margin-bottom:8px;min-height:30px;">${d.label.split(' (')[0]}</div>
@@ -4217,7 +4213,7 @@ VIEWS["vacc-pda"] = (s) => {
     crumbs: ["Aviation Civile", "RAS", d.label],
     html: `
       <div class="ph" style="background:linear-gradient(135deg,${d.color}15 0%,${d.color}30 100%);border-left:4px solid ${d.color};">
-        <div class="ph-tag" style="color:${d.color};">${d.icon} Domaine OACI ${d.code} · USOAP-CMA</div>
+        <div class="ph-tag" style="color:${d.color};">Domaine OACI ${d.code} · USOAP-CMA</div>
         <div class="ph-title">${d.label}</div>
         <div class="ph-sub">Indicateurs traceurs du domaine ${d.code} · Évaluation par aérodrome RAS · Cible USOAP : 75% niveau EI.</div>
       </div>
